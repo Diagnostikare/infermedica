@@ -114,8 +114,7 @@ module Infermedica
     # Submit a diagnosis object to get an explanation
     # See examples/explain.rb for an example
     def explain(req, args = {})
-      raise Infermedica::MissingField, 'target must be set' if
-        req.target.nil?
+      raise Infermedica::MissingField, 'target must be set' if req.target.nil?
       response = @connection.post('/explain', req.to_json, args)
     end
 
@@ -150,6 +149,7 @@ module Infermedica
 
       connection_args = { api_id: args[:api_id], api_key: args[:api_key] }
       connection_args[:endpoint] = args[:endpoint] if args.key?(:endpoint)
+      connection_args[:model] = args[:model] if args.key?(:model)
       @connection = Connection.new(connection_args)
 
       # Probably need more argument validation here...

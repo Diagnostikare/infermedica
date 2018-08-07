@@ -24,7 +24,7 @@ module Infermedica
       %w[ symptoms lab_tests risk_factors pursued ].each do |k|
         args.key?(k) || instance_variable_set(:"@#{k}", Array.new)
       end
-      
+
       @extras = {}
       @extras_permanent = {}
     end
@@ -33,8 +33,11 @@ module Infermedica
     # k: symptom code (for example 's_10'
     # v: symptom appropriate value (for example 'present')
 
-    def add_symptom(k, v)
-      @symptoms << { 'id': k, 'choice_id': v }
+    def add_symptom(k, v, initial = false)
+      symptom = { 'id': k, 'choice_id': v }
+      symptom['initial'] = true if initial
+
+      @symptoms << symptom
     end
 
     # Add a pursued_conditions
@@ -69,5 +72,5 @@ module Infermedica
     end
 
   end # class Diagnosis
-  
+
 end # module
