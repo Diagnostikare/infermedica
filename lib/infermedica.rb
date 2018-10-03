@@ -136,6 +136,11 @@ module Infermedica
       response = @connection.get(url)
     end
 
+    # Submit symptoms and to get the related symptoms
+    def related_symptoms(symptoms)
+      response = @connection.post('/suggest', symptoms.to_json)
+    end
+
     # Create a new Infermedica::Api object.
     # Takes a hash as argument.
     # The *api_id* and *api_key* entries are required.
