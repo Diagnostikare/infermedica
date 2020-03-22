@@ -105,10 +105,18 @@ module Infermedica
       response = @connection.post('/diagnosis', diag.to_json)
     end
 
+    def covid19_diagnosis(diag)
+      response = @connection.post('/covid19/diagnosis', diag.to_json)
+    end
+
     # Submit a diagnosis object to get a triage
     # See examples/triage.rb for an example
     def triage(diag)
       response = @connection.post('/triage', diag.to_json)
+    end
+
+    def covid19_triage(diag)
+      response = @connection.post('/covid19/triage', diag.to_json)
     end
 
     # Submit a diagnosis object to get an explanation

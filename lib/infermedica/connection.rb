@@ -42,7 +42,11 @@ module Infermedica
     # Send a get request to the given path
     def get(path)
       # TODO: do more hardening on the path
-      request = Net::HTTP::Get.new('/v2' + path, @headers)
+      if path.include?('covid19')
+        request = Net::HTTP::Get.new(path, @headers)
+      else
+        request = Net::HTTP::Get.new('/v2' + path, @headers)
+      end
       send_request(request)
     end
 
@@ -51,7 +55,11 @@ module Infermedica
     # params are additional header entries
 
     def post(path, json, params = {})
-      request = Net::HTTP::Post.new('/v2' + path, @headers)
+      if path.include?('covid19')
+        request = Net::HTTP::Post.new(path, @headers)
+      else
+        request = Net::HTTP::Post.new('/v2' + path, @headers)
+      end
       request.add_field('Content-Type', 'application/json')
       request.body = json
       params.each do |k, v|
