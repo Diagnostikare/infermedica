@@ -76,6 +76,10 @@ module Infermedica
       get_collection('/risk_factors')
     end
 
+    def get_covid_risk_factors # return a Hash of risk_factors
+      get_collection('/covid19/risk_factors')
+    end
+
     def get_risk_factor(id) # return a RiskFactor object
       response = @connection.get("/risk_factors/#{id}")
       return RiskFactor.new(response)
@@ -83,6 +87,10 @@ module Infermedica
 
     def get_symptoms # return a list of symptoms
       get_collection('/symptoms')
+    end
+
+    def get_covid_symptoms # return a list of symptoms
+      get_collection('/covid19/symptoms')
     end
 
     def get_symptom(id) # return a Symptom object
