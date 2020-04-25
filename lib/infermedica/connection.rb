@@ -31,7 +31,8 @@ module Infermedica
 
       @headers = {
         'App-Id':  @api_id,
-        'App-Key': @api_key
+        'App-Key': @api_key,
+        'Version': 'v3'
       }
       @headers['Dev-Mode'] = args[:dev_mode] if args.key?(:dev_mode)
       @headers['Model'] = args[:model] if args.key?(:model)
