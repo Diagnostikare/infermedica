@@ -10,6 +10,7 @@ require_relative 'infermedica/lab_tests'
 require_relative 'infermedica/risk_factors'
 require_relative 'infermedica/symptoms'
 require_relative 'infermedica/connection'
+require_relative 'infermedica/configuration'
 
 # = Infermedica: A ruby interface to the infermedica REST API
 #
@@ -39,6 +40,18 @@ require_relative 'infermedica/connection'
 #    require 'yaml'
 #    access = YAML.load(File.read('./config.yaml'))
 #    api = Infermedica::Api.new(access)
+#
+# Also can configure the gem
+#
+#    Infermedica.configure do |config|
+#      config.api_id = 'xxxxxx'
+#      config.api_key = 'xxxxxxxxxx'
+#    end
+#
+# and then you can safely use the api helper method
+#
+#    infermedica = Infermedica.api(model: 'my-model')
+#    infermedica.get_conditions
 
 module Infermedica
 
@@ -49,6 +62,25 @@ module Infermedica
 
   # Missing field or field not set in a request
   class MissingField < StandardError; end
+
+  # Configuration instance
+  def self.configuration
+    @configuration ||= Configuration.new
+  end
+
+  # Configure gem through block parameters
+  def self.configure
+    yield(configuration)
+  end
+
+  # Api helper method
+  def self.api(**args)
+    default_options = {
+      api_id: self.configuration.api_id,
+      api_key: self.configuration.api_key
+    }
+    Api.new(**args.merge(default_options))
+  end
 
   # Api defines all operations available from the REST API
 
@@ -98,10 +130,10 @@ module Infermedica
       return Symptom.new(response)
     end
 
-    # Get the Api info (version, date, 
+    # Get the Api info (version, date,
     # number of conditions, lab_tests, risk_factors, symptoms
 
-    def get_info 
+    def get_info
       response = @connection.get("/info")
       return Info.new(response)
     end
@@ -140,11 +172,11 @@ module Infermedica
     def search(phrase, args = {})
       url = '/search?phrase=' + phrase
       args['max_results'] = 8 unless args.key?('max_results')
-      args.each do |k, v| 
+      args.each do |k, v|
         puts "'#{k}': #{v.class} #{v}"
         if v.is_a?(Array) && k.to_s == 'filters'
           v.each { |e| url << "&type=#{e}" }
-        else 
+        else
           url << "&#{k}=#{v}"
         end
       end
@@ -162,7 +194,7 @@ module Infermedica
     # The *api_id* and *api_key* entries are required.
 
     def initialize(args)
-      raise ArgumentError, 
+      raise ArgumentError,
       'Infermedica::Api::initialize argument needs to be a Hash)' unless
         args.is_a?(Hash)
       raise ArgumentError, 'api_id is required' unless args.key?(:api_id)
