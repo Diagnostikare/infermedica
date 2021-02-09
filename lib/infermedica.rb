@@ -79,7 +79,7 @@ module Infermedica
       api_id: self.configuration.api_id,
       api_key: self.configuration.api_key
     }
-    Api.new(**args.merge(default_options))
+    Api.new(default_options.merge(**args))
   end
 
   # Api defines all operations available from the REST API
