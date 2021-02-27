@@ -86,8 +86,8 @@ module Infermedica
 
   class Api
 
-    def get_conditions     # return a Hash of known conditions
-      get_collection('/conditions')
+    def get_conditions(args = {}) # return a Hash of known conditions
+      get_collection("/conditions?#{URI.encode_www_form(args)}")
     end
 
     def get_condition(id) # return a Condition object
@@ -104,8 +104,8 @@ module Infermedica
       return LabTest.new(response)
     end
 
-    def get_risk_factors # return a Hash of risk_factors
-      get_collection('/risk_factors')
+    def get_risk_factors(args = {}) # return a Hash of risk_factors
+      get_collection("/risk_factors?#{URI.encode_www_form(args)}")
     end
 
     def get_covid_risk_factors # return a Hash of risk_factors
@@ -117,16 +117,16 @@ module Infermedica
       return RiskFactor.new(response)
     end
 
-    def get_symptoms # return a list of symptoms
-      get_collection('/symptoms')
+    def get_symptoms(args = {}) # return a list of symptoms
+      get_collection("/symptoms?#{URI.encode_www_form(args)}")
     end
 
     def get_covid_symptoms # return a list of symptoms
       get_collection('/covid19/symptoms')
     end
 
-    def get_symptom(id) # return a Symptom object
-      response = @connection.get("/symptoms/#{id}")
+    def get_symptom(id, args = {}) # return a Symptom object
+      response = @connection.get("/symptoms/#{id}?#{URI.encode_www_form(args)}")
       return Symptom.new(response)
     end
 
@@ -146,6 +146,7 @@ module Infermedica
     end
 
     def covid19_diagnosis(diag)
+      diag.age = diag.age[:value]
       response = @connection.post('/covid19/diagnosis', diag.to_json)
     end
 
@@ -156,6 +157,7 @@ module Infermedica
     end
 
     def covid19_triage(diag)
+      diag.age = diag.age[:value]
       response = @connection.post('/covid19/triage', diag.to_json)
     end
 
@@ -172,16 +174,7 @@ module Infermedica
     def search(phrase, args = {})
       url = '/search?phrase=' + phrase
       args['max_results'] = 8 unless args.key?('max_results')
-      args.each do |k, v|
-        puts "'#{k}': #{v.class} #{v}"
-        if v.is_a?(Array) && k.to_s == 'filters'
-          v.each { |e| url << "&type=#{e}" }
-        else
-          url << "&#{k}=#{v}"
-        end
-      end
-      puts "url: #{url}"
-      response = @connection.get(url)
+      response = @connection.get("#{url}&#{URI.encode_www_form(args)}")
     end
 
     # Submit symptoms and to get the related symptoms
@@ -224,6 +217,5 @@ module Infermedica
       end
       collection
     end
-
   end # class Api
 end # module

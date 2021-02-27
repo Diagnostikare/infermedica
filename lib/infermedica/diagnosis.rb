@@ -35,7 +35,7 @@ module Infermedica
 
     def add_symptom(k, v, initial = false)
       symptom = { 'id': k, 'choice_id': v }
-      symptom['initial'] = true if initial
+      symptom['source'] = 'initial' if initial
 
       @symptoms << symptom
     end

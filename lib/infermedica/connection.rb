@@ -46,7 +46,7 @@ module Infermedica
       if path.include?('covid19')
         request = Net::HTTP::Get.new(path, @headers)
       else
-        request = Net::HTTP::Get.new('/v2' + path, @headers)
+        request = Net::HTTP::Get.new('/v3' + path, @headers)
       end
       send_request(request)
     end
@@ -59,7 +59,7 @@ module Infermedica
       if path.include?('covid19')
         request = Net::HTTP::Post.new(path, @headers)
       else
-        request = Net::HTTP::Post.new('/v2' + path, @headers)
+        request = Net::HTTP::Post.new('/v3' + path, @headers)
       end
       request.add_field('Content-Type', 'application/json')
       request.body = json
