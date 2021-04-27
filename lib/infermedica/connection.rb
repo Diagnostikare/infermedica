@@ -36,6 +36,7 @@ module Infermedica
       @headers['Version'] = 'v4' if args.key?(:covid)
       @headers['Dev-Mode'] = args[:dev_mode] if args.key?(:dev_mode)
       @headers['Model'] = args[:model] if args.key?(:model)
+      @headers['Interview-Id'] = args[:interview_id] if args.key?(:interview_id)
     end
 
     # TODO: Might have to deal with args
