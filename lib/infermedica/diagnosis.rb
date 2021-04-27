@@ -33,9 +33,9 @@ module Infermedica
     # k: symptom code (for example 's_10'
     # v: symptom appropriate value (for example 'present')
 
-    def add_symptom(k, v, initial = false)
+    def add_symptom(k, v, source = nil)
       symptom = { 'id': k, 'choice_id': v }
-      symptom['source'] = 'initial' if initial
+      symptom['source'] = source.to_s if source
 
       @symptoms << symptom
     end
