@@ -112,8 +112,8 @@ module Infermedica
       get_collection('/covid19/risk_factors')
     end
 
-    def get_risk_factor(id) # return a RiskFactor object
-      response = @connection.get("/risk_factors/#{id}")
+    def get_risk_factor(id, args = {}) # return a RiskFactor object
+      response = @connection.get("/risk_factors/#{id}?#{URI.encode_www_form(args)}")
       return RiskFactor.new(response)
     end
 
