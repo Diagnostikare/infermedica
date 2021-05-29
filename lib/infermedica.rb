@@ -196,6 +196,7 @@ module Infermedica
       connection_args = { api_id: args[:api_id], api_key: args[:api_key] }
       connection_args[:endpoint] = args[:endpoint] if args.key?(:endpoint)
       connection_args[:model] = args[:model] if args.key?(:model)
+      connection_args[:interview_id] = args[:interview_id].to_s if args.key?(:interview_id)
       @connection = Connection.new(connection_args)
 
       # Probably need more argument validation here...
